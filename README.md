@@ -106,6 +106,50 @@ docker compose down -v              # stop and remove Mongo data volume
 
 ---
 
+## How to run from Docker Hub
+
+Use this when **frontend** and **backend** images are already on Docker Hub (for example after following [Publishing images to Docker Hub](#publishing-images-to-docker-hub)) and you want to run the stack **without** building from this repository’s Dockerfiles.
+
+### 1. Clone the repo and configure `.env`
+
+You still need **`docker-compose.yml`** (for MongoDB, networking, ports, and env wiring) and a root **`.env`** with **`AUTH_SECRET`** (same as the Compose workflow above):
+
+```bash
+git clone <repository-url>
+cd <repository-directory>
+cp .env.example .env
+# edit .env — set AUTH_SECRET (32+ characters for anything beyond local demos)
+```
+
+### 2. Pull images and tag them for Compose
+
+`docker-compose.yml` references local image names **`frontend:latest`** and **`backend:latest`**. Pull the Hub images, then retag them to match:
+
+```bash
+docker pull yashborkar/frontend:latest
+docker pull yashborkar/backend:latest
+docker tag yashborkar/frontend:latest frontend:latest
+docker tag yashborkar/backend:latest backend:latest
+```
+
+If you use different Hub repository names, adjust the `docker pull` lines; the **`docker tag … frontend:latest`** and **`… backend:latest`** lines must stay as shown so Compose picks them up.
+
+### 3. Start the stack without building
+
+From the repository root:
+
+```bash
+docker compose up -d --no-build
+```
+
+`--no-build` tells Compose to use the images you tagged in step 2 instead of building from `./frontend` and `./backend`. The **database** service still uses the public **`mongo:7`** image. First startup behavior (replica set init, `prisma db push`, seed) is the same as in [How to run (Docker Compose)](#how-to-run-docker-compose).
+
+### 4. Open the app
+
+Use the same URLs as in the Compose section: web UI [http://localhost:3000](http://localhost:3000), API health [http://localhost:14000/health](http://localhost:14000/health) (or the host port you set with **`BACKEND_PUBLISH`**).
+
+---
+
 ## How to run (local development, no full stack in Docker)
 
 Use this when you want hot reload in `frontend/` and `backend/` while Mongo runs in a container or elsewhere.
@@ -160,17 +204,19 @@ Members must complete **Member desk → MFA setup** before borrowing.
 
 ## Publishing images to Docker Hub
 
-Build locally, then tag with your Docker Hub username and push (example user `myuser`):
+Build locally, then tag and push to Docker Hub (namespace **`yashborkar`**):
 
 ```bash
 docker compose build
-docker tag frontend:latest myuser/frontend:latest
-docker tag backend:latest  myuser/backend:latest
-docker push myuser/frontend:latest
-docker push myuser/backend:latest
+docker tag frontend:latest yashborkar/frontend:latest
+docker tag backend:latest  yashborkar/backend:latest
+docker push yashborkar/frontend:latest
+docker push yashborkar/backend:latest
 ```
 
 Log in with `docker login` first. Use a **personal access token** instead of your account password when possible.
+
+To run a machine using these images instead of a local build, follow [How to run from Docker Hub](#how-to-run-from-docker-hub).
 
 ---
 
