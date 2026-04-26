@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  LIBRARIAN
+  MEMBER
+}
+
+model User {
+  id           String   @id @default(cuid()) @map("_id")
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role
+  mfaSecret    String?
+  mfaEnabled   Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  borrows      Borrow[]
+}
+
+model Book {
+  id                String   @id @default(cuid()) @map("_id")
+  title             String
+  author            String
+  isbn              String?  @unique
+  category          String   @default("General")
+  coverImageUrl     String?
+  copiesTotal       Int      @default(1)
+  copiesAvailable   Int      @default(1)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  borrows           Borrow[]
+
+  @@index([category])
+}
+
+model Borrow {
+  id         String    @id @default(cuid()) @map("_id")
+  userId     String
+  bookId     String
+  borrowedAt DateTime  @default(now())
+  dueAt      DateTime
+  returnedAt DateTime?
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  book       Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([bookId])
+  @@index([returnedAt])
+}

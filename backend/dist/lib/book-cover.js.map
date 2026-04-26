@@ -1,0 +1,1 @@
+{"version":3,"file":"book-cover.js","sourceRoot":"","sources":["../../src/lib/book-cover.ts"],"names":[],"mappings":"AAAA,gFAAgF;AAChF,MAAM,UAAU,mBAAmB,CAAC,IAAY;IAC9C,MAAM,KAAK,GAAG,IAAI,CAAC,OAAO,CAAC,WAAW,EAAE,EAAE,CAAC,CAAC;IAC5C,OAAO,yCAAyC,KAAK,QAAQ,CAAC;AAChE,CAAC"}

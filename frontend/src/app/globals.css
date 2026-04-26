@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+:root {
+  --bg-deep: #070b14;
+  --bg-card: rgba(18, 26, 42, 0.72);
+  --stroke: rgba(120, 160, 255, 0.18);
+  --accent: #6ee7ff;
+  --accent-2: #a78bfa;
+  --text: #e8eefc;
+  --muted: #94a3c8;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  min-height: 100vh;
+  color: var(--text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background:
+    radial-gradient(1200px 800px at 10% -10%, rgba(110, 231, 255, 0.18), transparent 55%),
+    radial-gradient(900px 600px at 90% 0%, rgba(167, 139, 250, 0.2), transparent 50%),
+    radial-gradient(800px 500px at 50% 100%, rgba(59, 130, 246, 0.12), transparent 45%),
+    var(--bg-deep);
+  background-attachment: fixed;
+}
+
+.glass {
+  background: var(--bg-card);
+  border: 1px solid var(--stroke);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+}
+
+.btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold transition;
+  background: linear-gradient(120deg, #22d3ee, #6366f1);
+  color: #041018;
+  box-shadow: 0 12px 40px rgba(34, 211, 238, 0.25);
+}
+.btn-primary:hover {
+  filter: brightness(1.06);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-slate-100 transition hover:bg-white/10;
+}
+
+.input {
+  @apply w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-100 outline-none ring-cyan-400/40 placeholder:text-slate-500 focus:ring-2;
+}
